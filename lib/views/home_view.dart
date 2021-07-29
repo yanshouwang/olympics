@@ -59,62 +59,139 @@ extension on _HomeViewState {
 
   Widget buildStandingsView(BuildContext context, MedalStandings standings) {
     return ListView.builder(
-      itemCount: standings.total.length,
+      itemCount: standings.total.length + 1,
       itemBuilder: (context, i) {
-        final team = standings.total[i];
-        return ListTile(
-          key: Key(team.id),
-          contentPadding: EdgeInsets.zero,
-          minVerticalPadding: 0.0,
-          horizontalTitleGap: 0.0,
-          title: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(
-                  team.rankOfGold,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.network(
-                  team.logoUrl,
-                  width: 32,
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  team.name,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  team.totalOfGold,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  team.totalOfSilver,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  team.totalOfBronze,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        );
+        if (i == 0) {
+          return buildStandingsHeaderView(context);
+        } else {
+          final team = standings.total[i - 1];
+          return buildStandingsTeamView(context, team);
+        }
       },
+    );
+  }
+
+  Widget buildStandingsHeaderView(BuildContext context) {
+    return ListTile(
+      key: Key('header'),
+      contentPadding: EdgeInsets.zero,
+      minVerticalPadding: 0.0,
+      horizontalTitleGap: 0.0,
+      tileColor: Colors.grey[300],
+      title: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              '名次',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              '国家/地区',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '金牌',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '银牌',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '铜牌',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '总数',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildStandingsTeamView(BuildContext context, Team team) {
+    return ListTile(
+      key: Key(team.id),
+      contentPadding: EdgeInsets.zero,
+      minVerticalPadding: 0.0,
+      horizontalTitleGap: 0.0,
+      title: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              team.rankOfGold,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Image.network(
+                    team.logoUrl,
+                    width: 32,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    team.name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              team.totalOfGold,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              team.totalOfSilver,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              team.totalOfBronze,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              team.total,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
