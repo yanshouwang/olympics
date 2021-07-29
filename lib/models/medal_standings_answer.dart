@@ -14,7 +14,7 @@ abstract class MedalStandingsAnswer {
     return _MedalStandingsAnswer.fromJson(sourceJSON);
   }
 
-  Map<String, dynamic> toJSON();
+  String toJSON();
 }
 
 abstract class MedalStandingsContent {
@@ -27,7 +27,7 @@ abstract class MedalStandingsContent {
     return _MedalStandingsContent.fromJson(sourceJSON);
   }
 
-  Map<String, dynamic> toJSON();
+  String toJSON();
 }
 
 abstract class MedalStandingsHead {
@@ -39,7 +39,7 @@ abstract class MedalStandingsHead {
     return _MedalStandingsHead.fromJson(sourceJSON);
   }
 
-  Map<String, dynamic> toJSON();
+  String toJSON();
 }
 
 abstract class MedalStandings {
@@ -53,7 +53,7 @@ abstract class MedalStandings {
     return _MedalStandings.fromJson(sourceJSON);
   }
 
-  Map<String, dynamic> toJSON();
+  String toJSON();
 }
 
 abstract class Team {
@@ -76,7 +76,7 @@ abstract class Team {
     return _Team.fromJson(sourceJSON);
   }
 
-  Map<String, dynamic> toJSON();
+  String toJSON();
 }
 
 @JsonSerializable()
@@ -95,7 +95,10 @@ class _MedalStandingsAnswer implements MedalStandingsAnswer {
       _$_MedalStandingsAnswerFromJson(sourceJSON);
 
   @override
-  Map<String, dynamic> toJSON() => _$_MedalStandingsAnswerToJson(this);
+  String toJSON() {
+    final value = _$_MedalStandingsAnswerToJson(this);
+    return json.encode(value);
+  }
 }
 
 @JsonSerializable()
@@ -116,7 +119,10 @@ class _MedalStandingsContent implements MedalStandingsContent {
       _$_MedalStandingsContentFromJson(sourceJSON);
 
   @override
-  Map<String, dynamic> toJSON() => _$_MedalStandingsContentToJson(this);
+  String toJSON() {
+    final value = _$_MedalStandingsContentToJson(this);
+    return json.encode(value);
+  }
 }
 
 @JsonSerializable()
@@ -134,7 +140,10 @@ class _MedalStandingsHead implements MedalStandingsHead {
       _$_MedalStandingsHeadFromJson(sourceJSON);
 
   @override
-  Map<String, dynamic> toJSON() => _$_MedalStandingsHeadToJson(this);
+  String toJSON() {
+    final value = _$_MedalStandingsHeadToJson(this);
+    return json.encode(value);
+  }
 }
 
 @JsonSerializable()
@@ -154,7 +163,10 @@ class _MedalStandings implements MedalStandings {
       _$_MedalStandingsFromJson(sourceJSON);
 
   @override
-  Map<String, dynamic> toJSON() => _$_MedalStandingsToJson(this);
+  String toJSON() {
+    final value = _$_MedalStandingsToJson(this);
+    return json.encode(value);
+  }
 }
 
 @JsonSerializable()
@@ -218,5 +230,8 @@ class _Team implements Team {
       _$_TeamFromJson(sourceJSON);
 
   @override
-  Map<String, dynamic> toJSON() => _$_TeamToJson(this);
+  String toJSON() {
+    final value = _$_TeamToJson(this);
+    return json.encode(value);
+  }
 }
