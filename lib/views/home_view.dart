@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:olympics/models.dart';
-import 'package:pedantic/pedantic.dart';
+import 'package:olympics/views.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeView extends StatefulWidget {
@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView>
     refreshController = RefreshController(initialRefresh: false);
     final loadDuration = Duration(seconds: 1);
     loadController = AnimationController(vsync: this, duration: loadDuration);
-    final updateDuration = Duration(seconds: 10);
+    final updateDuration = Duration(seconds: 5);
     timer = Timer.periodic(updateDuration, (timer) => updateStandings());
     updateStandings();
   }
@@ -65,13 +65,12 @@ class _HomeViewState extends State<HomeView>
 extension on _HomeViewState {
   Widget buildHomeView(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
       body: ValueListenableBuilder(
         valueListenable: answer,
         builder: (context, MedalStandingsAnswer? answerValue, child) {
           if (answerValue == null || answerValue.code != 0) {
             return Center(
-              child: buildLoadingView(context),
+              child: LoadingView(),
             );
           } else {
             return buildStandingsView(context, answerValue.content.standings);
@@ -86,15 +85,10 @@ extension on _HomeViewState {
       animation: loadController,
       builder: (context, child) {
         final radians = loadController.value * 2 * pi;
-        final size = 60.0;
         return Transform(
           transform: Matrix4.rotationY(radians),
-          origin: Offset(size / 2.0, size / 2.0),
-          child: Image.asset(
-            'images/tokyo2020.png',
-            width: size,
-            height: size,
-          ),
+          alignment: AlignmentDirectional.center,
+          child: Image.asset('images/tokyo2020.png'),
         );
       },
     );
@@ -115,7 +109,8 @@ extension on _HomeViewState {
       header: CustomHeader(
         height: headerHeight,
         onOffsetChange: (offset) {
-          if (offset < headerHeight) {
+          if (refreshController.headerStatus == RefreshStatus.idle ||
+              refreshController.headerStatus == RefreshStatus.canRefresh) {
             loadController.value = offset / headerHeight;
           }
         },
@@ -135,8 +130,10 @@ extension on _HomeViewState {
         },
         builder: (context, state) {
           return Container(
+            width: headerHeight,
             height: headerHeight,
             alignment: Alignment.center,
+            padding: EdgeInsets.all(20.0),
             child: buildLoadingView(context),
           );
         },
@@ -221,9 +218,9 @@ extension on _HomeViewState {
   }
 
   Widget buildStandingsTeamView(BuildContext context, Team team) {
-    return Flip(
+    return FlipView(
+      key: Key(team.id),
       child: ListTile(
-        key: Key(team.id),
         contentPadding: EdgeInsets.zero,
         minVerticalPadding: 0.0,
         horizontalTitleGap: 0.0,
@@ -291,16 +288,17 @@ extension on _HomeViewState {
   }
 }
 
-class Flip extends StatefulWidget {
+class FlipView extends StatefulWidget {
   final Widget? child;
 
-  const Flip({Key? key, this.child}) : super(key: key);
+  const FlipView({Key? key, this.child}) : super(key: key);
 
   @override
-  _FlipState createState() => _FlipState();
+  _FlipViewState createState() => _FlipViewState();
 }
 
-class _FlipState extends State<Flip> with SingleTickerProviderStateMixin {
+class _FlipViewState extends State<FlipView>
+    with SingleTickerProviderStateMixin {
   late AnimationController animation;
 
   @override
@@ -313,11 +311,11 @@ class _FlipState extends State<Flip> with SingleTickerProviderStateMixin {
       lowerBound: -1.0,
       upperBound: 0.0,
     );
+    animation.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    animation.forward();
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
